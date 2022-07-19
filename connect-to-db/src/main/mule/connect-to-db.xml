@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd">
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="316f746b-06c5-4f89-b63f-cf79a0c03226" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="Hemalatha@575" database="fifteen" />
+	</db:config>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="d61ceb1b-8ad6-438f-aa3d-e6b2f6602a61" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="connect-to-dbFlow" doc:id="2ac0909a-d007-4ded-ba33-2c9efc596c21" >
+		<http:listener doc:name="Listener" doc:id="d760dfdc-9941-4345-9a0f-2b4cdf9d6001" config-ref="HTTP_Listener_config" path="database"/>
+		<ee:transform doc:name="Transform Message" doc:id="3160fc6c-0fff-4eeb-891d-35065a92d0f5">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+1 to 100 map
+{
+  studentid: if ($$ == 3) "mulesoft" else 200 + $$,
+  studentname: "hema",
+  studentnumber: 8367756645
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<batch:job jobName="connect-to-dbBatch_Job" doc:id="e098cfdc-76bc-41ea-aa7d-49678c8f84e6" >
+			<batch:process-records >
+				<batch:step name="Batch_Step1" doc:id="ac2fed8e-94d5-4dd2-9461-73375232dac2" >
+					<batch:aggregator doc:name="Batch Aggregator" doc:id="ed14acdf-0d49-4ea2-bd13-d78e5a007278" size="20">
+						<logger level="INFO" doc:name="Logger" doc:id="e3ec0ac1-e77d-4c7f-8b40-8dd5b7e1aa67" message="#[payload]" />
+						<db:bulk-insert doc:name="Bulk insert" doc:id="521c3266-0b2a-4ed3-846b-baaae2292107" >
+							<db:sql ><![CDATA[INSERT INTO fifteen.student (studentid, studentname, studentnumber)
+VALUES (:studentid, :studentname, :studentnumber)]]></db:sql>
+						</db:bulk-insert>
+					</batch:aggregator>
+				</batch:step>
+			</batch:process-records>
+			<batch:on-complete>
+				<ee:transform doc:name="Transform Message" doc:id="cb600359-5887-4040-89f2-948de26555c1" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</batch:on-complete>
+		</batch:job>
+	</flow>
+</mule>
