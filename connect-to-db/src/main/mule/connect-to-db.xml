@@ -33,6 +33,7 @@ output application/java
 				<batch:step name="Batch_Step1" doc:id="ac2fed8e-94d5-4dd2-9461-73375232dac2" >
 					<batch:aggregator doc:name="Batch Aggregator" doc:id="ed14acdf-0d49-4ea2-bd13-d78e5a007278" size="20">
 						<logger level="INFO" doc:name="Logger" doc:id="e3ec0ac1-e77d-4c7f-8b40-8dd5b7e1aa67" message="#[payload]" />
+						<logger level="INFO" doc:name="Logger" doc:id="e3ec0ac1-e77d-4c7f-8b40-8dd5b7e1aa67" message=" hi" />
 						<db:bulk-insert doc:name="Bulk insert" doc:id="521c3266-0b2a-4ed3-846b-baaae2292107" >
 							<db:sql ><![CDATA[INSERT INTO fifteen.student (studentid, studentname, studentnumber)
 VALUES (:studentid, :studentname, :studentnumber)]]></db:sql>
