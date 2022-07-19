@@ -27,5 +27,6 @@ output application/json
 		<parallel-foreach doc:name="Parallel For Each" doc:id="62a593e4-ffd4-4300-b4ac-dce95ceb131a" >
 			<logger level="INFO" doc:name="Logger" doc:id="02489c05-2816-4dd6-be9e-64dd2b423be8" message="#[payload]"/>
 		</parallel-foreach>
+		<logger level="INFO" doc:name="Logger" doc:id="bbfff3d8-5601-449a-8d72-1c2b1074c32e" message="Hello"/>
 	</flow>
 </mule>
