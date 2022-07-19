@@ -27,5 +27,6 @@ output application/json
 		<foreach doc:name="For Each" doc:id="a78beb2c-834e-46b6-a98d-1984ccaaa85d" >
 		</foreach>
 		<logger level="INFO" doc:name="Logger" doc:id="fe4fb01a-5d35-4ded-ba92-2b51b9bef553" message="#[payload]" />
+		<logger level="INFO" doc:name="Logger" doc:id="34edfd01-90d9-4cc4-85c4-5a136bb9ad28" message="Hello123455"/>
 	</flow>
 </mule>
